@@ -1,9 +1,11 @@
+//Determines which actions Robocop is to pass when prompted
+
 import React from 'react';
 
 const MessageParser = ({ children, actions }) => {
   const parse = (message) => {
     console.log(message)
-    if (message.includes('hello','hi','hey')){ 
+    if (message.includes('hello')){ 
       actions.handleHello();
     }
 
@@ -18,6 +20,11 @@ const MessageParser = ({ children, actions }) => {
     if (message.includes('dog')) {
       actions.handleDog();
     }
+    
+    if (message.includes('anime')){
+      actions.handleAnime();
+    }
+
     console.log(message);
   };
 

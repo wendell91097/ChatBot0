@@ -1,8 +1,9 @@
-// new file called DogPicture.jsx
+// component that returns a random Dog Picture
 import React, { useEffect, useState } from 'react';
 
 const DogPicture = () => {
   const [imageUrl, setImageUrl] = useState('');
+
 
   useEffect(() => {
     fetch('https://dog.ceo/api/breeds/image/random')
@@ -11,6 +12,7 @@ const DogPicture = () => {
         setImageUrl(data.message);
       });
   }, []);
+
 
   return (
     <div>

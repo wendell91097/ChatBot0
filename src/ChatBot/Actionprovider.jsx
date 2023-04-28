@@ -1,3 +1,5 @@
+// Action functions for Robocop
+
 import React from 'react';
 
 const emptyMessages = ['Looks like you forgot to say something!',
@@ -16,6 +18,8 @@ let emptyMessagePointer = 11
 
 const ActionProvider = ({ createChatBotMessage, setState, children }) => {
   
+// Generates a response if the message is empty 
+
   const handleEmpty = () => {
     if(emptyMessagePointer !== emptyMessages.length -1){
         emptyMessagePointer++
@@ -32,6 +36,8 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
     }));
   };
 
+// Handles acknowledgements of appreciation
+
   const handleThanks = () => {
     const botMessage = createChatBotMessage("You're welcome! Can I do anything else for you?")
 
@@ -42,7 +48,7 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
   }
   
   const handleHello = () => {
-    const botMessage = createChatBotMessage("Hi there! What's up?")
+    const botMessage = createChatBotMessage("Hi there! I'm so happy to have someone to talk to!")
 
     setState((prev) => ({
       ...prev,
@@ -50,9 +56,11 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
     }))
   }
 
+//  Sends the user a random dog picture
+
   const handleDog = () => {
     const botMessage = createChatBotMessage(
-      "Here's a picture of a dog for you.",
+      "Here's a dog picture for you.",
       {
         widget: 'dogPicture',
       }
@@ -65,6 +73,38 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
     
   };
 
+// Async function to retrieve an anime quote
+
+  async function fetchAnimeQuote(){
+    const response = await fetch('https://animechan.vercel.app/api/random');
+    if (!response.ok) {
+        const message = `An error has occured: ${response.status}`;
+        throw new Error(message);
+      }
+    const animeInfo = await response.json()
+    return animeInfo
+    }
+
+// Creates a random anime quote for the user
+
+  const handleAnime = () => {
+    const botMessage = createChatBotMessage(
+        "Here's an anime quote for you."
+        )
+    console.log('anime message')
+    setState((prev) => ({
+        ...prev,
+        messages: [...prev.messages, botMessage],
+        }))
+    fetchAnimeQuote().then(animeInfo =>
+        {const animeMessage = createChatBotMessage(`"${animeInfo.quote}" -${animeInfo.character}`,
+        setState((prev) => ({
+            ...prev,
+            messages: [...prev.messages, animeMessage],
+            }))
+        )}
+    )
+  }
   
   
   return (
@@ -76,6 +116,7 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
             handleThanks,
             handleEmpty,
             handleDog,
+            handleAnime,
           },
         });
       })}
